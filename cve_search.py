@@ -47,37 +47,23 @@ class CVESearcher:
         # Generate search queries
         search_queries = self._generate_search_queries(make, model, year if year else "")
         
-        for query in search_queries[:8]:  # Increase to 8 queries for better coverage
+        for query in search_queries[:4]:  # Reduce to 4 queries to avoid rate limiting
             try:
                 # Add delay for rate limiting (NVD recommends no more than 50 requests in 30 seconds)
-                time.sleep(1)
+                time.sleep(3)  # Increase delay to avoid 429 errors
                 
-                results = self._search_cves_by_keyword(query, max_results=30)
+                results = self._search_cves_by_keyword(query, max_results=25)
                 all_results.extend(results)
                 
-                # Don't break early - we want comprehensive results
+                # If we have enough results, break early to avoid rate limiting
+                if len(all_results) >= 20:
+                    break
                     
             except Exception as e:
                 print(f"Error searching with query '{query}': {str(e)}")
                 continue
         
-        # If we don't have many results, try more targeted broader searches
-        if len(all_results) < 5:
-            broader_queries = [
-                f"{make} automotive",
-                f"{make} vehicle",
-                "automotive infotainment",
-                "vehicle telematics"
-            ]
-            
-            for query in broader_queries[:2]:  # Reduce to avoid rate limiting
-                try:
-                    time.sleep(2)  # Increase delay to avoid 429 errors
-                    results = self._search_cves_by_keyword(query, max_results=15)
-                    all_results.extend(results)
-                except Exception as e:
-                    print(f"Error with broader search '{query}': {str(e)}")
-                    continue
+        # Skip broader searches to avoid rate limiting - focus on quality over quantity
         
         # Remove duplicates and filter for relevance
         unique_results = self._deduplicate_results(all_results)
@@ -87,48 +73,36 @@ class CVESearcher:
         return sorted_results[:max_results]
     
     def _generate_search_queries(self, make: str, model: str, year: str = "") -> List[str]:
-        """Generate search queries for CVE search"""
+        """Generate prioritized search queries for CVE search"""
         queries = []
         
-        # Direct vehicle searches - these are most specific
+        # Priority 1: Direct vehicle searches - most specific and relevant
         queries.append(f"{make} {model}")
         if year and year.strip():
             queries.append(f"{make} {model} {year}")
         
-        # Make-only searches to catch broader vulnerabilities
-        queries.append(make)
-        
-        # Common automotive technology searches
+        # Priority 2: Make with key automotive technologies
         queries.extend([
             f"{make} infotainment",
-            f"{make} navigation", 
-            f"{make} bluetooth",
-            f"{make} wifi",
-            f"{make} android",
-            f"{make} linux",
-            f"{make} uconnect" if make.lower() in ['chrysler', 'dodge', 'jeep', 'ram'] else f"{make} connect",
-            f"{make} sync" if make.lower() == 'ford' else f"{make} system"
+            f"{make} automotive"
         ])
         
-        # Broader technology searches that often affect vehicles
-        queries.extend([
-            "automotive bluetooth",
-            "vehicle wifi", 
-            "car android",
-            "infotainment system",
-            "telematics unit",
-            "automotive linux",
-            "vehicle navigation",
-            "car entertainment",
-            "automotive android",
-            "vehicle connectivity",
-            "automotive gateway",
-            "can bus",
-            "obd port",
-            "tire pressure monitoring",
-            "keyless entry",
-            "remote start"
-        ])
+        # Priority 3: Make-specific system searches
+        if make.lower() == 'ford':
+            queries.append("ford sync")
+        elif make.lower() in ['chrysler', 'dodge', 'jeep', 'ram']:
+            queries.append(f"{make} uconnect")
+        elif make.lower() == 'toyota':
+            queries.append("toyota entune")
+        elif make.lower() == 'honda':
+            queries.append("honda connect")
+        elif make.lower() in ['bmw', 'mercedes', 'audi']:
+            queries.append(f"{make} idrive" if make.lower() == 'bmw' else f"{make} command")
+        else:
+            queries.append(f"{make} connect")
+        
+        # Priority 4: General make search
+        queries.append(make)
         
         return queries
     

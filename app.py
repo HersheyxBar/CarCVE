@@ -26,6 +26,101 @@ cve_searcher = get_cve_searcher()
 
 # Main app
 def main():
+    # Apple-inspired custom CSS
+    st.markdown("""
+    <style>
+    .main {
+        padding-top: 2rem;
+    }
+    
+    .stApp {
+        background-color: #f5f5f7;
+    }
+    
+    .stTitle {
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+        font-weight: 600;
+        color: #1d1d1f;
+        font-size: 3rem;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    
+    .stSubheader {
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+        font-weight: 500;
+        color: #1d1d1f;
+        font-size: 1.5rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .stSelectbox > div > div {
+        background-color: white;
+        border: 1px solid #d2d2d7;
+        border-radius: 8px;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    }
+    
+    .stButton > button {
+        background: linear-gradient(135deg, #007aff 0%, #0051d5 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        transition: all 0.2s ease;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+    }
+    
+    .stMetric {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid #d2d2d7;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stExpander {
+        background-color: white;
+        border: 1px solid #d2d2d7;
+        border-radius: 12px;
+        margin: 0.5rem 0;
+    }
+    
+    .stRadio > div {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid #d2d2d7;
+    }
+    
+    .stMultiSelect > div > div {
+        background-color: white;
+        border: 1px solid #d2d2d7;
+        border-radius: 8px;
+    }
+    
+    .stAlert {
+        border-radius: 12px;
+        border: none;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    }
+    
+    hr {
+        border: none;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #d2d2d7, transparent);
+        margin: 2rem 0;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
     st.title("Automotive Cybersecurity Scanner Prototype Beta")
     st.markdown("---")
     
