@@ -29,7 +29,7 @@ class CVESearcher:
             'v2x', 'vehicle to everything', 'over the air update'
         ]
     
-    def search_vehicle_cves(self, make: str, model: str, year: str = None, max_results: int = 50) -> List[Dict]:
+    def search_vehicle_cves(self, make: str, model: str, year: Optional[str] = None, max_results: int = 50) -> List[Dict]:
         """
         Search for CVEs related to a specific vehicle
         
@@ -45,23 +45,43 @@ class CVESearcher:
         all_results = []
         
         # Generate search queries
-        search_queries = self._generate_search_queries(make, model, year)
+        search_queries = self._generate_search_queries(make, model, year if year else "")
         
-        for query in search_queries[:3]:  # Limit to first 3 queries to avoid rate limits
+        for query in search_queries[:8]:  # Increase to 8 queries for better coverage
             try:
                 # Add delay for rate limiting (NVD recommends no more than 50 requests in 30 seconds)
                 time.sleep(2)
                 
-                results = self._search_cves_by_keyword(query, max_results=20)
+                results = self._search_cves_by_keyword(query, max_results=30)
                 all_results.extend(results)
                 
-                # Stop if we have enough results
-                if len(all_results) >= max_results:
-                    break
+                # Don't break early - we want comprehensive results
                     
             except Exception as e:
                 print(f"Error searching with query '{query}': {str(e)}")
                 continue
+        
+        # If we don't have many results, try broader searches
+        if len(all_results) < 10:
+            broader_queries = [
+                "automotive",
+                "vehicle",
+                "car",
+                "infotainment", 
+                "telematics",
+                "bluetooth automotive",
+                "android automotive",
+                "linux automotive"
+            ]
+            
+            for query in broader_queries[:5]:
+                try:
+                    time.sleep(2)
+                    results = self._search_cves_by_keyword(query, max_results=20)
+                    all_results.extend(results)
+                except Exception as e:
+                    print(f"Error with broader search '{query}': {str(e)}")
+                    continue
         
         # Remove duplicates and sort by severity
         unique_results = self._deduplicate_results(all_results)
@@ -69,30 +89,48 @@ class CVESearcher:
         
         return sorted_results[:max_results]
     
-    def _generate_search_queries(self, make: str, model: str, year: str = None) -> List[str]:
+    def _generate_search_queries(self, make: str, model: str, year: str = "") -> List[str]:
         """Generate search queries for CVE search"""
         queries = []
         
-        # Direct vehicle searches
+        # Direct vehicle searches - these are most specific
         queries.append(f"{make} {model}")
-        if year:
+        if year and year.strip():
             queries.append(f"{make} {model} {year}")
         
-        # Broader automotive searches with make
+        # Make-only searches to catch broader vulnerabilities
+        queries.append(make)
+        
+        # Common automotive technology searches
         queries.extend([
-            f"{make} automotive",
             f"{make} infotainment",
-            f"{make} telematics",
-            f"{make} vehicle"
+            f"{make} navigation", 
+            f"{make} bluetooth",
+            f"{make} wifi",
+            f"{make} android",
+            f"{make} linux",
+            f"{make} uconnect" if make.lower() in ['chrysler', 'dodge', 'jeep', 'ram'] else f"{make} connect",
+            f"{make} sync" if make.lower() == 'ford' else f"{make} system"
         ])
         
-        # Generic automotive searches
+        # Broader technology searches that often affect vehicles
         queries.extend([
-            "automotive infotainment",
-            "vehicle telematics", 
-            "car ECU",
             "automotive bluetooth",
-            "vehicle navigation"
+            "vehicle wifi", 
+            "car android",
+            "infotainment system",
+            "telematics unit",
+            "automotive linux",
+            "vehicle navigation",
+            "car entertainment",
+            "automotive android",
+            "vehicle connectivity",
+            "automotive gateway",
+            "can bus",
+            "obd port",
+            "tire pressure monitoring",
+            "keyless entry",
+            "remote start"
         ])
         
         return queries
