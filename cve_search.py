@@ -61,31 +61,28 @@ class CVESearcher:
                 print(f"Error searching with query '{query}': {str(e)}")
                 continue
         
-        # If we don't have many results, try broader searches
-        if len(all_results) < 10:
+        # If we don't have many results, try more targeted broader searches
+        if len(all_results) < 5:
             broader_queries = [
-                "automotive",
-                "vehicle",
-                "car",
-                "infotainment", 
-                "telematics",
-                "bluetooth automotive",
-                "android automotive",
-                "linux automotive"
+                f"{make} automotive",
+                f"{make} vehicle",
+                "automotive infotainment",
+                "vehicle telematics"
             ]
             
-            for query in broader_queries[:5]:
+            for query in broader_queries[:2]:  # Reduce to avoid rate limiting
                 try:
-                    time.sleep(1)
-                    results = self._search_cves_by_keyword(query, max_results=20)
+                    time.sleep(2)  # Increase delay to avoid 429 errors
+                    results = self._search_cves_by_keyword(query, max_results=15)
                     all_results.extend(results)
                 except Exception as e:
                     print(f"Error with broader search '{query}': {str(e)}")
                     continue
         
-        # Remove duplicates and sort by severity
+        # Remove duplicates and filter for relevance
         unique_results = self._deduplicate_results(all_results)
-        sorted_results = self._sort_by_severity(unique_results)
+        relevant_results = self._filter_relevant_results(unique_results, make, model)
+        sorted_results = self._sort_by_severity(relevant_results)
         
         return sorted_results[:max_results]
     
@@ -260,6 +257,46 @@ class CVESearcher:
                 unique_results.append(result)
         
         return unique_results
+    
+    def _filter_relevant_results(self, results: List[Dict], make: str, model: str) -> List[Dict]:
+        """Filter results to ensure relevance to the specific vehicle"""
+        relevant_results = []
+        make_lower = make.lower()
+        model_lower = model.lower()
+        
+        # Other car manufacturers to exclude when searching for specific make
+        other_makes = {
+            'tesla', 'ford', 'gm', 'general motors', 'chevrolet', 'toyota', 'honda', 
+            'nissan', 'bmw', 'mercedes', 'audi', 'volkswagen', 'hyundai', 'kia',
+            'mazda', 'subaru', 'lexus', 'acura', 'infiniti', 'cadillac', 'buick',
+            'chrysler', 'dodge', 'jeep', 'ram', 'volvo', 'jaguar', 'land rover',
+            'porsche', 'mini', 'mitsubishi', 'genesis'
+        }
+        
+        # Remove the searched make from exclusion list
+        other_makes.discard(make_lower)
+        
+        for result in results:
+            description = result.get('description', '').lower()
+            cve_id = result.get('id', '').lower()
+            
+            # Check if this CVE mentions other car manufacturers
+            mentions_other_make = any(other_make in description for other_make in other_makes)
+            
+            # If it mentions the searched make/model or general automotive terms without other makes
+            mentions_searched_make = make_lower in description or model_lower in description
+            mentions_automotive = any(term in description for term in [
+                'automotive', 'vehicle', 'car', 'infotainment', 'telematics', 
+                'navigation', 'bluetooth', 'ecu', 'can bus'
+            ])
+            
+            # Include if:
+            # 1. Specifically mentions the searched make/model, OR
+            # 2. Mentions automotive terms without mentioning other specific manufacturers
+            if mentions_searched_make or (mentions_automotive and not mentions_other_make):
+                relevant_results.append(result)
+        
+        return relevant_results
     
     def _sort_by_severity(self, results: List[Dict]) -> List[Dict]:
         """Sort results by severity (Critical > High > Medium > Low > Unknown)"""

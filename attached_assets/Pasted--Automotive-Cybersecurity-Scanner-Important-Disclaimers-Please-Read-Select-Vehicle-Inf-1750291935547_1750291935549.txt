@@ -1,0 +1,99 @@
+🚗 Automotive Cybersecurity Scanner
+⚠️ Important Disclaimers - Please Read
+
+🔍 Select Vehicle Information Method
+Choose how to specify the vehicle:
+
+
+Select Make & Model
+
+
+Enter VIN Number
+
+Select Make:
+
+Toyota
+Select Model:
+
+Camry
+Select Year:
+
+2026
+🚙 Vehicle Information
+Make
+
+Toyota
+Model
+
+Camry
+Year
+
+2026
+Source
+
+Manual Selection
+🔍 CVE Vulnerability Search
+Filter by Severity:
+
+Choose an option
+Maximum Results:
+
+10
+100
+
+📋 Vulnerability Results
+Found 46 vulnerabilities matching your criteria
+
+🚨 CVE-2019-13581 - CRITICAL Severity
+
+Description:
+
+An issue was discovered in Marvell 88W8688 Wi-Fi firmware before version p52, as used on Tesla Model S/X vehicles manufactured before March 2018, via the Parrot Faurecia Automotive FC6050W module. A heap-based buffer overflow allows remote attackers to cause a denial of service or execute arbitrary code via malformed Wi-Fi packets.
+
+Published: 2019-11-15
+
+Last Modified: 2024-11-21
+
+References:
+
+https://keenlab.tencent.com/en/2020/01/02/exploiting-wifi-stack-on-tesla-model-s/
+https://www.marvell.com/documents/ioaj5dntk2ubykssa78s/
+https://keenlab.tencent.com/en/2020/01/02/exploiting-wifi-stack-on-tesla-model-s/
+🔴 CRITICAL
+
+CVSS Score
+
+9.8/10
+🚨 CVE-2019-13582 - CRITICAL Severity
+
+Description:
+
+An issue was discovered in Marvell 88W8688 Wi-Fi firmware before version p52, as used on Tesla Model S/X vehicles manufactured before March 2018, via the Parrot Faurecia Automotive FC6050W module. A stack overflow could lead to denial of service or arbitrary code execution.
+
+Published: 2019-11-15
+
+Last Modified: 2024-11-21
+
+References:
+
+https://www.marvell.com/documents/ioaj5dntk2ubykssa78s/
+https://www.marvell.com/documents/ioaj5dntk2ubykssa78s/
+🔴 CRITICAL
+
+CVSS Score
+
+9.8/10
+🚨 CVE-2021-27389 - CRITICAL Severity
+
+Description:
+
+A vulnerability has been identified in Opcenter Quality (All versions < V12.2), QMS Automotive (All versions < V12.30). A private sign key is shipped with the product without adequate protection.
+
+Published: 2021-04-22
+
+Last Modified: 2024-11-21
+
+References:
+
+https://cert-portal.siemens.com/productcert/pdf/ssa-788287.pdf
+https://cert-portal.siemens.com/productcert/pdf/ssa-788287.pdf
