@@ -7,8 +7,8 @@ import time
 
 # Page configuration
 st.set_page_config(
-    page_title="Automotive Cybersecurity Scanner",
-    page_icon="🚗",
+    page_title="Automotive Cybersecurity Scanner Prototype Beta",
+    page_icon="⚡",
     layout="wide"
 )
 
@@ -26,11 +26,11 @@ cve_searcher = get_cve_searcher()
 
 # Main app
 def main():
-    st.title("🚗 Automotive Cybersecurity Scanner")
+    st.title("Automotive Cybersecurity Scanner Prototype Beta")
     st.markdown("---")
     
     # Disclaimer section
-    with st.expander("⚠️ Important Disclaimers - Please Read", expanded=False):
+    with st.expander("Important Disclaimers - Please Read", expanded=False):
         st.warning("""
         **Data Limitations & Legal Notice:**
         
@@ -44,7 +44,7 @@ def main():
         """)
     
     # Input method selection
-    st.subheader("🔍 Select Vehicle Information Method")
+    st.subheader("Select Vehicle Information Method")
     input_method = st.radio(
         "Choose how to specify the vehicle:",
         ["Select Make & Model", "Enter VIN Number"],
@@ -142,7 +142,7 @@ def handle_vin_input():
 
 def display_vehicle_info(vehicle_info):
     """Display decoded vehicle information"""
-    st.subheader("🚙 Vehicle Information")
+    st.subheader("Vehicle Information")
     
     col1, col2, col3, col4 = st.columns(4)
     
@@ -161,7 +161,7 @@ def display_vehicle_info(vehicle_info):
 
 def search_vulnerabilities(vehicle_info):
     """Search for vulnerabilities based on vehicle information"""
-    st.subheader("🔍 CVE Vulnerability Search")
+    st.subheader("CVE Vulnerability Search")
     
     # Search options
     col1, col2 = st.columns(2)
@@ -174,15 +174,13 @@ def search_vulnerabilities(vehicle_info):
         )
     
     with col2:
-        max_results = st.slider(
-            "Maximum Results:",
-            min_value=10,
-            max_value=100,
-            value=50,
-            step=10
+        max_results = st.selectbox(
+            "Results Limit",
+            options=[10, 25, 50, 75, 100],
+            index=2
         )
     
-    if st.button("🔍 Search for Vulnerabilities", type="primary"):
+    if st.button("Search for Vulnerabilities", type="primary"):
         with st.spinner("Searching CVE database..."):
             try:
                 # Add rate limiting delay
@@ -205,7 +203,7 @@ def search_vulnerabilities(vehicle_info):
 
 def display_cve_results(results, severity_filter):
     """Display CVE search results"""
-    st.subheader("📋 Vulnerability Results")
+    st.subheader("Vulnerability Results")
     
     # Filter results by severity
     filtered_results = []
@@ -257,7 +255,7 @@ def display_cve_results(results, severity_filter):
                     st.metric("CVSS Score", f"{cve['cvss_score']}/10")
     
     # Additional information
-    with st.expander("ℹ️ How to Interpret These Results"):
+    with st.expander("How to Interpret These Results"):
         st.write("""
         **Understanding the Results:**
         
