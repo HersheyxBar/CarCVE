@@ -41,20 +41,6 @@ def main():
         --accent-hover: #0051d5;
     }
     
-    @media (prefers-color-scheme: light) {
-        :root {
-            --bg-primary: #f2f2f7;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #f9f9f9;
-            --text-primary: #000000;
-            --text-secondary: #1d1d1f;
-            --text-tertiary: #6e6e73;
-            --border-color: #d2d2d7;
-            --accent-color: #007aff;
-            --accent-hover: #0051d5;
-        }
-    }
-    
     .stApp {
         background-color: var(--bg-primary) !important;
         color: var(--text-primary) !important;
