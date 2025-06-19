@@ -50,7 +50,7 @@ class CVESearcher:
         for query in search_queries[:8]:  # Increase to 8 queries for better coverage
             try:
                 # Add delay for rate limiting (NVD recommends no more than 50 requests in 30 seconds)
-                time.sleep(2)
+                time.sleep(1)
                 
                 results = self._search_cves_by_keyword(query, max_results=30)
                 all_results.extend(results)
@@ -76,7 +76,7 @@ class CVESearcher:
             
             for query in broader_queries[:5]:
                 try:
-                    time.sleep(2)
+                    time.sleep(1)
                     results = self._search_cves_by_keyword(query, max_results=20)
                     all_results.extend(results)
                 except Exception as e:
