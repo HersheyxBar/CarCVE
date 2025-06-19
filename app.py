@@ -281,7 +281,7 @@ def handle_make_model_selection():
     return None
 
 def handle_vin_input():
-    """Handle VIN input and decoding"""
+    """Handle VIN input and decoding with improved validation"""
     st.subheader("Enter VIN Number")
     vin = st.text_input(
         "VIN (17 characters):",
@@ -290,12 +290,11 @@ def handle_vin_input():
     ).upper().strip()
     
     if vin:
-        if len(vin) != 17:
-            st.error("VIN must be exactly 17 characters long")
-            return None
-        
-        if not vin.isalnum():
-            st.error("VIN should contain only letters and numbers")
+        # Get validation errors for user feedback
+        validation_errors = vin_decoder.get_validation_errors(vin)
+        if validation_errors:
+            for error in validation_errors:
+                st.error(error)
             return None
         
         with st.spinner("Decoding VIN..."):
@@ -305,8 +304,11 @@ def handle_vin_input():
                     st.success("VIN decoded successfully!")
                     return vehicle_info
                 else:
-                    st.error("Could not decode VIN. Please check the VIN and try again.")
+                    st.error("Could not decode VIN. Please verify the VIN and try again.")
                     return None
+            except ValueError as e:
+                st.error(f"Invalid VIN: {str(e)}")
+                return None
             except Exception as e:
                 st.error(f"Error decoding VIN: {str(e)}")
                 return None

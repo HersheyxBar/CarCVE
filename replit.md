@@ -100,10 +100,22 @@ The application is designed for educational and research purposes, providing gen
 - **Locale Support**: glibcLocales package for internationalization
 - **Server Configuration**: Headless mode with public address binding
 
+## Recent Changes
+
+- June 19, 2025: Major code refactoring and improvements
+  - Implemented professional rate limiting with RateLimiter class
+  - Added comprehensive logging throughout the application
+  - Refactored CVE search with prioritized queries and intelligent filtering
+  - Enhanced VIN validation with detailed error reporting
+  - Applied Apple-inspired dark theme with professional styling
+  - Improved error handling and user feedback
+  - Optimized API usage to prevent 429 rate limit errors
+
 ## Changelog
 
 Changelog:
 - June 18, 2025. Initial setup
+- June 19, 2025. Code refactoring, rate limiting, and UI improvements
 
 ## User Preferences
 
