@@ -26,97 +26,189 @@ cve_searcher = get_cve_searcher()
 
 # Main app
 def main():
-    # Apple-inspired custom CSS
+    # Apple-inspired dark theme CSS
     st.markdown("""
     <style>
-    .main {
-        padding-top: 2rem;
+    :root {
+        --bg-primary: #1c1c1e;
+        --bg-secondary: #2c2c2e;
+        --bg-tertiary: #3a3a3c;
+        --text-primary: #ffffff;
+        --text-secondary: #ebebf5;
+        --text-tertiary: #ebebf599;
+        --border-color: #48484a;
+        --accent-color: #007aff;
+        --accent-hover: #0051d5;
+    }
+    
+    @media (prefers-color-scheme: light) {
+        :root {
+            --bg-primary: #f2f2f7;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f9f9f9;
+            --text-primary: #000000;
+            --text-secondary: #1d1d1f;
+            --text-tertiary: #6e6e73;
+            --border-color: #d2d2d7;
+            --accent-color: #007aff;
+            --accent-hover: #0051d5;
+        }
     }
     
     .stApp {
-        background-color: #f5f5f7;
+        background-color: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
     }
     
-    .stTitle {
-        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-        font-weight: 600;
-        color: #1d1d1f;
-        font-size: 3rem;
-        text-align: center;
-        margin-bottom: 1rem;
+    .main {
+        padding-top: 2rem;
+        background-color: var(--bg-primary) !important;
     }
     
-    .stSubheader {
-        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-        font-weight: 500;
-        color: #1d1d1f;
-        font-size: 1.5rem;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
+    .stTitle h1 {
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif !important;
+        font-weight: 600 !important;
+        color: var(--text-primary) !important;
+        font-size: 3rem !important;
+        text-align: center !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    .stSubheader h2, .stSubheader h3 {
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif !important;
+        font-weight: 500 !important;
+        color: var(--text-primary) !important;
+        font-size: 1.5rem !important;
+        margin-top: 2rem !important;
+        margin-bottom: 1rem !important;
     }
     
     .stSelectbox > div > div {
-        background-color: white;
-        border: 1px solid #d2d2d7;
-        border-radius: 8px;
-        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+        background-color: var(--bg-secondary) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif !important;
+        color: var(--text-primary) !important;
+    }
+    
+    .stSelectbox label {
+        color: var(--text-primary) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif !important;
     }
     
     .stButton > button {
-        background: linear-gradient(135deg, #007aff 0%, #0051d5 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-        font-weight: 500;
-        padding: 0.5rem 1rem;
-        transition: all 0.2s ease;
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-hover) 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif !important;
+        font-weight: 500 !important;
+        padding: 0.5rem 1rem !important;
+        transition: all 0.2s ease !important;
     }
     
     .stButton > button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3) !important;
     }
     
     .stMetric {
-        background-color: white;
-        padding: 1rem;
-        border-radius: 12px;
-        border: 1px solid #d2d2d7;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        background-color: var(--bg-secondary) !important;
+        padding: 1rem !important;
+        border-radius: 12px !important;
+        border: 1px solid var(--border-color) !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    .stMetric label {
+        color: var(--text-secondary) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif !important;
+    }
+    
+    .stMetric div[data-testid="metric-value"] {
+        color: var(--text-primary) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif !important;
     }
     
     .stExpander {
-        background-color: white;
-        border: 1px solid #d2d2d7;
-        border-radius: 12px;
-        margin: 0.5rem 0;
+        background-color: var(--bg-secondary) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 12px !important;
+        margin: 0.5rem 0 !important;
+    }
+    
+    .stExpander summary {
+        color: var(--text-primary) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif !important;
+    }
+    
+    .stExpander div[data-testid="stExpanderDetails"] {
+        background-color: var(--bg-secondary) !important;
+        color: var(--text-secondary) !important;
     }
     
     .stRadio > div {
-        background-color: white;
-        padding: 1rem;
-        border-radius: 12px;
-        border: 1px solid #d2d2d7;
+        background-color: var(--bg-secondary) !important;
+        padding: 1rem !important;
+        border-radius: 12px !important;
+        border: 1px solid var(--border-color) !important;
+    }
+    
+    .stRadio label {
+        color: var(--text-primary) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif !important;
     }
     
     .stMultiSelect > div > div {
-        background-color: white;
-        border: 1px solid #d2d2d7;
-        border-radius: 8px;
+        background-color: var(--bg-secondary) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        color: var(--text-primary) !important;
+    }
+    
+    .stMultiSelect label {
+        color: var(--text-primary) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif !important;
     }
     
     .stAlert {
-        border-radius: 12px;
-        border: none;
-        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+        border-radius: 12px !important;
+        border: none !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif !important;
+    }
+    
+    .stAlert[data-baseweb="notification"] {
+        background-color: var(--bg-secondary) !important;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--border-color) !important;
+    }
+    
+    .stTextInput > div > div {
+        background-color: var(--bg-secondary) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        color: var(--text-primary) !important;
+    }
+    
+    .stTextInput label {
+        color: var(--text-primary) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif !important;
+    }
+    
+    .stSpinner > div {
+        border-color: var(--accent-color) !important;
     }
     
     hr {
-        border: none;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #d2d2d7, transparent);
-        margin: 2rem 0;
+        border: none !important;
+        height: 1px !important;
+        background: linear-gradient(90deg, transparent, var(--border-color), transparent) !important;
+        margin: 2rem 0 !important;
+    }
+    
+    p, div, span {
+        color: var(--text-secondary) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif !important;
     }
     </style>
     """, unsafe_allow_html=True)
