@@ -7,7 +7,7 @@ import time
 
 # Page configuration
 st.set_page_config(
-    page_title="Automotive Cybersecurity Scanner Prototype Beta",
+    page_title="Automotive Cybersecurity Scanner Prototype",
     page_icon="⚡",
     layout="wide"
 )
